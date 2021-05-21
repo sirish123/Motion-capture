@@ -1,5 +1,5 @@
 import cv2
-from datetime import datetime # 
+from datetime import datetime
 from datetime import time
 import pandas
 import time as t
@@ -12,7 +12,7 @@ df = pandas.DataFrame(columns = ["Start","End"])
 video = cv2.VideoCapture(0)
 video.read()
 t.sleep(1.0)
- 
+i=0 
 while True:
     check, frame = video.read()
     status = 0
@@ -43,7 +43,8 @@ while True:
         times.append(datetime.now())
     if status_list [-1] == 0 and status_list[-2]==1:
         times.append(datetime.now())
- 
+    
+    
     cv2.imshow("Capturing", gray)
     cv2.imshow('Delta Frame', delta_frame)
     cv2.imshow('Threshold Frame', thresh_frame)
@@ -60,8 +61,14 @@ while True:
  
 for i in range (0,len(times),2):
     df = df.append({"Start": times[i],"End": times[i+1]}, ignore_index= True)
+
  
 df.to_csv("Times.csv")
- 
+while(i<10):
+    if(status_list[-1]==1 and status_list[-2]==1):
+        ret,image = video.read()
+        cv2.imwrite('kang'+str(i)+'.jpg', image)   
+    i=i+1
+
 video.release()
 cv2.destroyAllWindows()
